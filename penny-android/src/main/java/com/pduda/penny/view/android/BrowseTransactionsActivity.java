@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 import com.pduda.penny.toolkit.ProgrammerMistake;
 
-public class BrowseTransactionsActivity extends Activity {
+public class BrowseTransactionsActivity extends Activity implements BrowseTransactionsView {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
