@@ -1,46 +1,44 @@
 package com.pduda.penny.view.android;
 
 import android.widget.TextView;
-import com.pduda.penny.toolkit.ProgrammerMistake;
+import com.pduda.penny.domain.mvp.BrowseTransactionsView;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 
 @RunWith(RobolectricTestRunner.class)
-public class DisplayNumberOfTransactionsTest {
+public class DisplayNumberOfTransactionsTest
+    extends BrowseTransactionsViewContract {
 
-    @Test
-    public void happyPath() throws Exception {
-        final BrowseTransactionsActivity browseTransactionsActivity = new BrowseTransactionsActivity();
+  @Test
+  public void happyPath() throws Exception {
+    final BrowseTransactionsActivity
+        browseTransactionsActivity
+        = new BrowseTransactionsActivity();
 
-        browseTransactionsActivity.onCreate(null);
+    browseTransactionsActivity.onCreate(null);
 
-        browseTransactionsActivity.displayNumberOfTransactions(
-                12);
+    browseTransactionsActivity.displayNumberOfTransactions(
+        12);
 
-        final TextView transactionsCountView = (TextView) browseTransactionsActivity
-                .findViewById(R.id.transactionsCount);
+    final TextView transactionsCountView
+        = (TextView) browseTransactionsActivity
+        .findViewById(R.id.transactionsCount);
 
-        assertEquals(
-                "12", transactionsCountView.getText().toString());
-    }
+    assertEquals(
+        "12", transactionsCountView.getText().toString()
+    );
+  }
 
-    @Test
-    public void rejectNegativeNumber() throws Exception {
-        final BrowseTransactionsActivity browseTransactionsActivity = new BrowseTransactionsActivity();
+  @Override
+  protected BrowseTransactionsView initializeView() {
+    final BrowseTransactionsActivity
+        browseTransactionsActivity
+        = new BrowseTransactionsActivity();
 
-        browseTransactionsActivity.onCreate(null);
+    browseTransactionsActivity.onCreate(null);
 
-        try {
-            browseTransactionsActivity
-                    .displayNumberOfTransactions(-1);
-            fail(
-                    "Why did you display a negative number of transactions?! "
-                    + "That's crazy talk!");
-        } catch (ProgrammerMistake success) {
-            assertTrue(
-                    success.getCause() instanceof IllegalArgumentException);
-        }
-    }
+    return browseTransactionsActivity;
+  }
 }
