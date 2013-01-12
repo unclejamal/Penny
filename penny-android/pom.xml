@@ -21,6 +21,11 @@
         </dependency>
         <dependency>
             <groupId>com.pduda.penny</groupId>
+            <artifactId>penny-domain</artifactId>
+            <version>${project.version}</version>
+        </dependency>        
+        <dependency>
+            <groupId>com.pduda.penny</groupId>
             <artifactId>penny-toolkit</artifactId>
             <version>${project.version}</version>
         </dependency>
