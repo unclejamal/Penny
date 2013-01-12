@@ -1,13 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout android:id="@+id/Table"
-             android:layout_width="fill_parent"
-             android:layout_height="fill_parent"
-             android:stretchColumns="0,1,2,3,4"
-             xmlns:android="http://schemas.android.com/apk/res/android">
-    <TableRow android:layout_width="fill_parent"
-              android:layout_height="wrap_content">
-        <Button android:id="@+id/btnBlack" android:text="@string/btnBlack" />
-        <Button android:id="@+id/btnWhite" android:text="@string/btnWhite" />
-        <Button android:id="@+id/btnRandom" android:text="@string/btnRandom" />
-    </TableRow>
-</TableLayout>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        >
+    <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            >
+        <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                >
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="You have "
+                    />
+            <TextView
+                    android:id="@+id/transactionsCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    />
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" transactions"
+                    />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="10dp"
+            >
+        <Button android:id="@+id/exportAllTransactionsButton"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="Export All Transactions"
+                android:onClick="exportAllTransactions"
+                />
+    </LinearLayout>
+</RelativeLayout>

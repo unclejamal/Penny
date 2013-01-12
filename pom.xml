@@ -10,6 +10,7 @@
     <modules>
         <module>penny-android</module>
         <module>penny-domain</module>
+	<module>penny-toolkit</module>
     </modules>
 
     <properties>
