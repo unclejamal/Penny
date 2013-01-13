@@ -1,4 +1,4 @@
-package com.pduda.penny.controller.android.test;
+package com.pduda.penny.domain.mvp;
 
 public interface RendersView {
     void render();

@@ -1,6 +1,7 @@
-package com.pduda.penny.view.android;
+package com.pduda.penny.controller.android;
 
-import com.pduda.penny.controller.android.test.RendersView;
+import com.pduda.penny.domain.mvp.RendersView;
+import com.pduda.penny.view.android.BrowseTransactionsActivity;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import org.jmock.Expectations;
 import org.jmock.Mockery;

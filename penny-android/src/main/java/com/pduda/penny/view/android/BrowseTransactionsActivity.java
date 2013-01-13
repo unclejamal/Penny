@@ -3,7 +3,9 @@ package com.pduda.penny.view.android;
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
-import com.pduda.penny.controller.android.test.RendersView;
+import com.pduda.penny.domain.mvp.BrowseTransactionsModel;
+import com.pduda.penny.domain.mvp.BrowseTransactionsPresenter;
+import com.pduda.penny.domain.mvp.RendersView;
 import com.pduda.penny.domain.mvp.BrowseTransactionsView;
 import com.pduda.penny.toolkit.ProgrammerMistake;
 
@@ -12,7 +14,15 @@ public class BrowseTransactionsActivity extends Activity implements BrowseTransa
     private final RendersView rendersView;
 
     public BrowseTransactionsActivity() {
-        this(null);
+        // We can't chain the constructor, because the instance in the process of being created is itself the view.
+        // We have to wait for super() to be (implicitly) invoked.
+        this.rendersView = new BrowseTransactionsPresenter(
+                new BrowseTransactionsModel() {
+                    @Override
+                    public int countTransactions() {
+                        return 12;
+                    }
+                }, this);
     }
 
     public BrowseTransactionsActivity(
@@ -31,8 +41,6 @@ public class BrowseTransactionsActivity extends Activity implements BrowseTransa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        final TextView transactionsCountView = (TextView) findViewById(R.id.transactionsCount);
-        transactionsCountView.setText(String.valueOf(1));
     }
 
     public void displayNumberOfTransactions(
@@ -46,7 +54,6 @@ public class BrowseTransactionsActivity extends Activity implements BrowseTransa
         }
 
         final TextView transactionsCountView = (TextView) findViewById(R.id.transactionsCount);
-
         transactionsCountView.setText(
                 String.format(
                 "%1$d", transactionCount));
