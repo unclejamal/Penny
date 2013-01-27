@@ -1,6 +1,6 @@
 package com.pduda.penny.view.android;
 
-import com.pduda.penny.domain.model.view.BrowseTransactionsView;
+import com.pduda.penny.domain.view.BrowseTransactionsView;
 import com.pduda.penny.toolkit.ProgrammerMistake;
 import org.junit.Test;
 import static org.junit.Assert.*;

@@ -14,7 +14,7 @@ import com.pduda.penny.domain.presenter.ExportAllTransactionsAction;
 import com.pduda.penny.domain.model.InternalStorageException;
 import com.pduda.penny.domain.model.BrowseTransactionsModel;
 import com.pduda.penny.domain.presenter.BrowseTransactionsPresenter;
-import com.pduda.penny.domain.model.view.BrowseTransactionsView;
+import com.pduda.penny.domain.view.BrowseTransactionsView;
 import com.pduda.penny.domain.presenter.RendersView;
 import com.pduda.penny.toolkit.ProgrammerMistake;
 import java.io.File;

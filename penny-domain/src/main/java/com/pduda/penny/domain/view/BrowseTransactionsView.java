@@ -1,4 +1,4 @@
-package com.pduda.penny.domain.model.view;
+package com.pduda.penny.domain.view;
 
 public interface BrowseTransactionsView {
 
