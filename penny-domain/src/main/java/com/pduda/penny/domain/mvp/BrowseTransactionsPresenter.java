@@ -12,6 +12,7 @@ public class BrowseTransactionsPresenter implements RendersView {
         this.view = view;
     }
 
+    @Override
     public void render() {
         view.displayNumberOfTransactions(model.countTransactions());
     }

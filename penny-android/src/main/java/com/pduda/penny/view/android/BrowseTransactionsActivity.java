@@ -2,12 +2,17 @@ package com.pduda.penny.view.android;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+import com.google.common.collect.Lists;
+import com.pduda.penny.domain.controller.ExportAllTransactionsAction;
 import com.pduda.penny.domain.mvp.BrowseTransactionsModel;
 import com.pduda.penny.domain.mvp.BrowseTransactionsPresenter;
-import com.pduda.penny.domain.mvp.RendersView;
 import com.pduda.penny.domain.mvp.BrowseTransactionsView;
+import com.pduda.penny.domain.mvp.RendersView;
 import com.pduda.penny.toolkit.ProgrammerMistake;
+import java.util.Collection;
 
 public class BrowseTransactionsActivity extends Activity implements BrowseTransactionsView {
 
@@ -22,11 +27,24 @@ public class BrowseTransactionsActivity extends Activity implements BrowseTransa
                     public int countTransactions() {
                         return 12;
                     }
+
+                    @Override
+                    public Collection<Object> findAllTransactions() {
+                        return Lists.newArrayList();
+                    }
                 }, this);
     }
 
+    /**
+     * @deprecated
+     */
     public BrowseTransactionsActivity(
             RendersView rendersView) {
+        this(rendersView, null);
+    }
+
+    public BrowseTransactionsActivity(
+            RendersView rendersView, ExportAllTransactionsAction exportAllTransactionsAction) {
         this.rendersView = rendersView;
     }
 
@@ -43,6 +61,7 @@ public class BrowseTransactionsActivity extends Activity implements BrowseTransa
         setContentView(R.layout.main);
     }
 
+    @Override
     public void displayNumberOfTransactions(
             int transactionCount) {
         if (transactionCount < 0) {
@@ -57,5 +76,13 @@ public class BrowseTransactionsActivity extends Activity implements BrowseTransa
         transactionsCountView.setText(
                 String.format(
                 "%1$d", transactionCount));
+    }
+
+    public void exportAllTransactions(View clicked) {
+        Toast.makeText(
+                getApplicationContext(),
+                "Exported all transactions to /mnt/sdcard/TrackEveryPenny.csv",
+                Toast.LENGTH_LONG).show();
+
     }
 }

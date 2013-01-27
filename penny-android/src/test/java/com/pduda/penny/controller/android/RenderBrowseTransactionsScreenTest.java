@@ -1,7 +1,9 @@
 package com.pduda.penny.controller.android;
 
+import android.widget.Button;
 import com.pduda.penny.domain.mvp.RendersView;
 import com.pduda.penny.view.android.BrowseTransactionsActivity;
+import com.pduda.penny.view.android.R;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -15,6 +17,19 @@ import org.junit.runner.RunWith;
 public class RenderBrowseTransactionsScreenTest {
 
     private Mockery mockery = new Mockery();
+
+    @Test
+    public void exportAllTransactionsButtonDoesNotBlowUp()
+            throws Exception {
+        final BrowseTransactionsActivity browseTransactionsActivity = new BrowseTransactionsActivity();
+        browseTransactionsActivity.onCreate(null);
+        
+        final Button exportAllTransactionsButton = (Button) browseTransactionsActivity.findViewById(
+                R.id.exportAllTransactionsButton);
+        exportAllTransactionsButton.performClick();
+        
+        // don't blow up
+    }
 
     @Test
     public void askToRenderOnResume() throws Exception {
