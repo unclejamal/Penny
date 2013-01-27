@@ -1,6 +1,5 @@
 package com.pduda.penny.domain.view;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.*;
 import org.junit.Test;
 
@@ -24,12 +23,13 @@ public class FormatTransactionsAsCsvFileTest {
 
     private Mockery mockery = new Mockery();
     private final CsvFormat<Transaction> transactionCsvFormat = mockery.mock(CsvFormat.class, "transaction format");
+    private final CsvHeaderFormat csvHeaderFormat = new TransactionsCsvHeader();
 
     @Test
     public void noTransactions() throws Exception {
         final String text = formatTransactionsAsCsvFile(
                 Collections.<Transaction>emptyList(),
-                transactionCsvFormat);
+                csvHeaderFormat, transactionCsvFormat);
         assertThat(
                 text, matches(
                 "\\s*\"Date\",\\s*\"Category\","
@@ -60,7 +60,7 @@ public class FormatTransactionsAsCsvFileTest {
                 Lists.newArrayList(
                 createAnyNonNullTransaction(),
                 createAnyNonNullTransaction(),
-                createAnyNonNullTransaction()),
+                createAnyNonNullTransaction()), csvHeaderFormat,
                 transactionCsvFormat);
 
         final List<String> lines = Arrays.asList(
@@ -89,23 +89,16 @@ public class FormatTransactionsAsCsvFileTest {
 
     private String formatTransactionsAsCsvFile(
             List<Transaction> transactions,
+            CsvHeaderFormat csvHeaderFormat,
             CsvFormat<Transaction> transactionCsvFormat) {
         // I'm not sure whether I prefer this to join on line
         // .separator
         final StringWriter text = new StringWriter();
         final PrintWriter canvas = new PrintWriter(text);
-        canvas.println(formatHeader());
+        canvas.println(csvHeaderFormat.formatHeader());
         for (Transaction each : transactions) {
             canvas.println(transactionCsvFormat.format(each));
         }
         return text.toString();
-    }
-
-    private String formatHeader() {
-        return Joiner.on(",").join(
-                Collections2.transform(
-                Lists.newArrayList(
-                "Date", "Category", "Amount"),
-                new SurroundWithQuotes()));
     }
 }
