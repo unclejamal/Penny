@@ -1,17 +1,21 @@
 package com.pduda.penny.domain.view;
 
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
 import com.google.common.collect.*;
 import org.junit.Test;
 
-import java.io.*;
 import java.util.*;
 
 import static org.hamcrest.core.StringEndsWith.endsWith;
+import static com.google.common.collect.Collections2.transform;
 import static org.junit.Assert.*;
 import static com.pduda.hamcrest.RegexMatcher.*;
+import com.pduda.penny.Conveniences;
 import com.pduda.penny.domain.model.Amount;
 import com.pduda.penny.domain.model.Category;
 import com.pduda.penny.domain.model.Transaction;
+import javax.annotation.Nullable;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
@@ -24,7 +28,8 @@ public class FormatTransactionsAsCsvFileTest {
     private Mockery mockery = new Mockery();
     private final CsvFormat<Transaction> transactionCsvFormat = mockery.mock(CsvFormat.class, "transaction format");
     private final CsvHeaderFormat csvHeaderFormat = mockery
-            .mock(CsvHeaderFormat.class, "header format");
+            .mock(
+            CsvHeaderFormat.class, "header format");
 
     @Test
     public void noTransactions() throws Exception {
@@ -41,13 +46,10 @@ public class FormatTransactionsAsCsvFileTest {
                 csvHeaderFormat, transactionCsvFormat);
         final List<String> lines = Arrays.asList(
                 text.split(
-                System.getProperty("line.separator")));
+                Conveniences.NEWLINE));
         assertEquals(1, lines.size());
         assertThat(lines.get(0), matches("::header::"));
-        assertThat(
-                text, endsWith(
-                System.getProperty(
-                "line.separator")));
+        assertThat(text, endsWith(Conveniences.NEWLINE));
     }
 
     @Test
@@ -77,16 +79,13 @@ public class FormatTransactionsAsCsvFileTest {
 
         final List<String> lines = Arrays.asList(
                 text.split(
-                System.getProperty("line.separator")));
+                Conveniences.NEWLINE));
         assertEquals(4, lines.size());
         assertThat(lines.get(0), matches("::header::"));
         assertThat(lines.get(1), matches("::row 1::"));
         assertThat(lines.get(2), matches("::row 2::"));
         assertThat(lines.get(3), matches("::row 3::"));
-        assertThat(
-                text, endsWith(
-                System.getProperty(
-                "line.separator")));
+        assertThat(text, endsWith(Conveniences.NEWLINE));
     }
 
     private Transaction createAnyNonNullTransaction() {
@@ -96,18 +95,26 @@ public class FormatTransactionsAsCsvFileTest {
                 26123));
     }
 
+    // REFACTOR Parameterise this in terms of Transaction
     private String formatTransactionsAsCsvFile(
             List<Transaction> transactions,
             CsvHeaderFormat csvHeaderFormat,
-            CsvFormat<Transaction> transactionCsvFormat) {
-        // I'm not sure whether I prefer this to join on line
-        // .separator
-        final StringWriter text = new StringWriter();
-        final PrintWriter canvas = new PrintWriter(text);
-        canvas.println(csvHeaderFormat.formatHeader());
-        for (Transaction each : transactions) {
-            canvas.println(transactionCsvFormat.format(each));
-        }
-        return text.toString();
+            final CsvFormat<Transaction> transactionCsvFormat) {
+        final List<String> lines = Lists.newArrayList(
+                csvHeaderFormat.formatHeader());
+        lines.addAll(
+                transform(
+                transactions,
+                new Function<Transaction, String>() {
+                    @Override
+                    public String apply(
+                            @Nullable Transaction transaction) {
+                        return transactionCsvFormat.format(
+                                transaction);
+                    }
+                }));
+
+        return Joiner.on(Conveniences.NEWLINE).join(lines)
+                .concat(Conveniences.NEWLINE);
     }
 }
