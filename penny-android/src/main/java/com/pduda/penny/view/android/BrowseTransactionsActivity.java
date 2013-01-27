@@ -162,17 +162,22 @@ public class BrowseTransactionsActivity extends Activity implements BrowseTransa
         }
     }
 
-    private void handleError(String internalMessage, String userVisibleMessage, Throwable cause) {
+// REUSE Any Activity
+    private void handleError(
+            String internalMessage, String userVisibleMessage,
+            Throwable cause) {
         logError(internalMessage, cause);
         notifyUser(userVisibleMessage);
     }
 
+    // REUSE Any Activity
     private void notifyUser(String message) {
         Toast.makeText(
                 getApplicationContext(), message, Toast.LENGTH_LONG)
                 .show();
     }
 
+    // REUSE Anywhere in this app
     private void logError(
             String message, Throwable reported) {
         Log.e("TrackEveryPenny", message, reported);
