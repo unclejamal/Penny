@@ -8,7 +8,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.google.common.collect.Lists;
 import com.pduda.penny.controller.android.AndroidDevicePublicStorageGateway;
+import com.pduda.penny.controller.android.InternalStorageException;
 import com.pduda.penny.controller.android.PublicStorageMediaNotAvailableException;
+import com.pduda.penny.controller.android.PublicStorageMediaNotWritableException;
 import com.pduda.penny.domain.controller.ExportAllTransactionsAction;
 import com.pduda.penny.domain.mvp.BrowseTransactionsModel;
 import com.pduda.penny.domain.mvp.BrowseTransactionsPresenter;
@@ -22,9 +24,11 @@ public class BrowseTransactionsActivity extends Activity implements BrowseTransa
 
     private final RendersView rendersView;
     private final AndroidDevicePublicStorageGateway androidDevicePublicStorageGateway;
+    private final BrowseTransactionsModel browseTransactionsModel;
 
     public BrowseTransactionsActivity() {
-        // We can't chain the constructor, because the instance in the process of being created is itself the view.
+        // We can't chain the constructor, because the instance
+        // in the process of being created is itself the view.
         // We have to wait for super() to be (implicitly) invoked.
 
         // REFACTOR Delegate BrowseTransactionsView behavior to a new class
@@ -44,6 +48,18 @@ public class BrowseTransactionsActivity extends Activity implements BrowseTransa
         // SMELL I have to initialize this because I can't use
         // constructor chaining yet. This has to be anything
         // that won't throw a stupid exception.
+        this.browseTransactionsModel = new BrowseTransactionsModel() {
+            @Override
+            public int countTransactions() {
+                return 0;
+            }
+
+            @Override
+            public Collection<Object> findAllTransactions() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+        };
+
         this.androidDevicePublicStorageGateway = new AndroidDevicePublicStorageGateway() {
             @Override
             public File findPublicExternalStorageDirectory()
@@ -51,7 +67,6 @@ public class BrowseTransactionsActivity extends Activity implements BrowseTransa
                 return new File(".");
             }
         };
-
     }
 
     /**
@@ -59,18 +74,18 @@ public class BrowseTransactionsActivity extends Activity implements BrowseTransa
      */
     public BrowseTransactionsActivity(
             RendersView rendersView) {
-        this(rendersView, null, null);
+        this(rendersView, null, null, null);
     }
 
     public BrowseTransactionsActivity(
-            RendersView rendersView, ExportAllTransactionsAction exportAllTransactionsAction) {
-        this(rendersView, exportAllTransactionsAction, null);
-    }
+            RendersView rendersView,
+            ExportAllTransactionsAction exportAllTransactionsAction,
+            AndroidDevicePublicStorageGateway androidDevicePublicStorageGateway,
+            BrowseTransactionsModel browseTransactionsModel) {
 
-    public BrowseTransactionsActivity(
-            RendersView rendersView, ExportAllTransactionsAction exportAllTransactionsAction, AndroidDevicePublicStorageGateway androidDevicePublicStorageGateway) {
         this.rendersView = rendersView;
         this.androidDevicePublicStorageGateway = androidDevicePublicStorageGateway;
+        this.browseTransactionsModel = browseTransactionsModel;
     }
 
     @Override
@@ -105,6 +120,7 @@ public class BrowseTransactionsActivity extends Activity implements BrowseTransa
 
     public void exportAllTransactions(View clicked) {
         try {
+            browseTransactionsModel.findAllTransactions();
             androidDevicePublicStorageGateway
                     .findPublicExternalStorageDirectory();
             Toast.makeText(
@@ -112,14 +128,38 @@ public class BrowseTransactionsActivity extends Activity implements BrowseTransa
                     "Exported all transactions to /mnt/sdcard/TrackEveryPenny.csv",
                     Toast.LENGTH_LONG).show();
 
+        } catch (InternalStorageException reported) {
+            Log.wtf("TrackEveryPenny", reported);
+            Toast.makeText(
+                    getApplicationContext(),
+                    "Something strange just happened. Try again. You might need to "
+                    + "reinstall the application. I feel embarrassed and ashamed.",
+                    Toast.LENGTH_LONG).show();
+
         } catch (PublicStorageMediaNotAvailableException reported) {
-            Log.e("TrackEveryPenny",
+            Log.e(
+                    "TrackEveryPenny",
                     "Couldn't save a file to public storage; media not available",
                     reported);
-            Toast.makeText(getApplicationContext(),
+            Toast.makeText(
+                    getApplicationContext(),
                     "No place to which to export the transactions. Insert an SD card or connect an "
                     + "external storage device and try again.",
                     Toast.LENGTH_LONG).show();
+
+        } catch (PublicStorageMediaNotWritableException reported) {
+            final String pathNotWritableAsText = reported
+                    .getPathNotWritable().getAbsolutePath();
+            Log.e(
+                    "TrackEveryPenny", String.format(
+                    "Path %1$s not writable", pathNotWritableAsText),
+                    reported);
+
+            Toast.makeText(
+                    getApplicationContext(),
+                    String.format(
+                    "Permission denied trying to export the transactions to file %1$s",
+                    pathNotWritableAsText), Toast.LENGTH_LONG).show();
         }
     }
 }
