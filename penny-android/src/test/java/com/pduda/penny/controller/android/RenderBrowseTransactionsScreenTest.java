@@ -1,7 +1,7 @@
 package com.pduda.penny.controller.android;
 
 import android.widget.Button;
-import com.pduda.penny.domain.mvp.RendersView;
+import com.pduda.penny.domain.presenter.RendersView;
 import com.pduda.penny.view.android.BrowseTransactionsActivity;
 import com.pduda.penny.view.android.R;
 import com.xtremelabs.robolectric.RobolectricTestRunner;

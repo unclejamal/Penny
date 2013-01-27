@@ -1,7 +1,7 @@
 package com.pduda.penny.view.android;
 
 import android.widget.TextView;
-import com.pduda.penny.domain.mvp.BrowseTransactionsView;
+import com.pduda.penny.domain.model.view.BrowseTransactionsView;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;

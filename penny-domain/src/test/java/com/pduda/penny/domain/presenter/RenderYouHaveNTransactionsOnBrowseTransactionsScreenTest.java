@@ -1,5 +1,8 @@
-package com.pduda.penny.domain.mvp;
+package com.pduda.penny.domain.presenter;
 
+import com.pduda.penny.domain.model.view.BrowseTransactionsView;
+import com.pduda.penny.domain.model.BrowseTransactionsModel;
+import com.pduda.penny.domain.presenter.BrowseTransactionsPresenter;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
