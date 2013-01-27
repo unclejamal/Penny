@@ -1,12 +1,14 @@
 package com.pduda.penny.domain.model;
 
+import com.pduda.penny.toolkit.ProgrammerMistake;
+
 public final class Category {
 
     private final String name;
 
     public Category(String name) {
         if (name == null) {
-            throw new IllegalArgumentException(
+            throw new ProgrammerMistake(
                     "name can't be null");
         }
         this.name = name;

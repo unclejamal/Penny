@@ -1,5 +1,6 @@
 package com.pduda.penny.domain.model;
 
+import com.pduda.penny.toolkit.ProgrammerMistake;
 import org.joda.time.LocalDate;
 
 public class Transaction {
@@ -11,15 +12,15 @@ public class Transaction {
     public Transaction(
             LocalDate date, Category category, Amount amount) {
         if (date == null) {
-            throw new IllegalArgumentException(
+            throw new ProgrammerMistake(
                     "A Transaction must have a date.");
         }
         if (category == null) {
-            throw new IllegalArgumentException(
+            throw new ProgrammerMistake(
                     "A Transaction must have a category.");
         }
         if (amount == null) {
-            throw new IllegalArgumentException(
+            throw new ProgrammerMistake(
                     "A Transaction must have an amount.");
         }
 
