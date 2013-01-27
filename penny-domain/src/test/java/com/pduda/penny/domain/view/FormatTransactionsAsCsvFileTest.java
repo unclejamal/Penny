@@ -23,17 +23,27 @@ public class FormatTransactionsAsCsvFileTest {
 
     private Mockery mockery = new Mockery();
     private final CsvFormat<Transaction> transactionCsvFormat = mockery.mock(CsvFormat.class, "transaction format");
-    private final CsvHeaderFormat csvHeaderFormat = new TransactionsCsvHeader();
+    private final CsvHeaderFormat csvHeaderFormat = mockery
+            .mock(CsvHeaderFormat.class, "header format");
 
     @Test
     public void noTransactions() throws Exception {
+        mockery.checking(
+                new Expectations() {
+                    {
+                        allowing(csvHeaderFormat).formatHeader();
+                        will(returnValue("::header::"));
+                    }
+                });
+
         final String text = formatTransactionsAsCsvFile(
                 Collections.<Transaction>emptyList(),
                 csvHeaderFormat, transactionCsvFormat);
-        assertThat(
-                text, matches(
-                "\\s*\"Date\",\\s*\"Category\","
-                + "\\s*\"Amount\"\\s*"));
+        final List<String> lines = Arrays.asList(
+                text.split(
+                System.getProperty("line.separator")));
+        assertEquals(1, lines.size());
+        assertThat(lines.get(0), matches("::header::"));
         assertThat(
                 text, endsWith(
                 System.getProperty(
@@ -45,6 +55,8 @@ public class FormatTransactionsAsCsvFileTest {
         mockery.checking(
                 new Expectations() {
                     {
+                        allowing(csvHeaderFormat).formatHeader();
+                        will(returnValue("::header::"));
                         allowing(transactionCsvFormat).format(
                                 with(
                                 any(
@@ -67,10 +79,7 @@ public class FormatTransactionsAsCsvFileTest {
                 text.split(
                 System.getProperty("line.separator")));
         assertEquals(4, lines.size());
-        assertThat(
-                lines.get(0), matches(
-                "\\s*\"Date\",\\s*\"Category\","
-                + "\\s*\"Amount\"\\s*"));
+        assertThat(lines.get(0), matches("::header::"));
         assertThat(lines.get(1), matches("::row 1::"));
         assertThat(lines.get(2), matches("::row 2::"));
         assertThat(lines.get(3), matches("::row 3::"));
