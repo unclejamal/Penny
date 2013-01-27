@@ -12,6 +12,10 @@ public final class Amount {
         return new Amount(cents);
     }
 
+    public double inDollars() {
+        return cents / 100.0d;
+    }
+
     @Override
     public int hashCode() {
         int hash = 7;
