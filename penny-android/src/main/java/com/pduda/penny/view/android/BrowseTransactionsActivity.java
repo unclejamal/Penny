@@ -140,7 +140,7 @@ public class BrowseTransactionsActivity extends Activity implements BrowseTransa
                     Toast.LENGTH_LONG).show();
 
         } catch (InternalStorageException reported) {
-            Log.wtf("TrackEveryPenny", reported);
+            wtf(reported);
             Toast.makeText(
                     getApplicationContext(),
                     "Something strange just happened. Try again. You might need to "
@@ -148,8 +148,7 @@ public class BrowseTransactionsActivity extends Activity implements BrowseTransa
                     Toast.LENGTH_LONG).show();
 
         } catch (PublicStorageMediaNotAvailableException reported) {
-            Log.e(
-                    "TrackEveryPenny",
+            logError(
                     "Couldn't save a file to public storage; media not available",
                     reported);
             Toast.makeText(
@@ -161,16 +160,24 @@ public class BrowseTransactionsActivity extends Activity implements BrowseTransa
         } catch (PublicStorageMediaNotWritableException reported) {
             final String pathNotWritableAsText = reported
                     .getPathNotWritable().getAbsolutePath();
-            Log.e(
-                    "TrackEveryPenny", String.format(
-                    "Path %1$s not writable", pathNotWritableAsText),
-                    reported);
-
+            logError(
+                    String.format(
+                    "Path %1$s not writable",
+                    pathNotWritableAsText), reported);
             Toast.makeText(
                     getApplicationContext(),
                     String.format(
                     "Permission denied trying to export the transactions to file %1$s",
                     pathNotWritableAsText), Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void logError(
+            String message, Throwable reported) {
+        Log.e("TrackEveryPenny", message, reported);
+    }
+
+    private void wtf(Throwable reported) {
+        Log.wtf("TrackEveryPenny", reported);
     }
 }
