@@ -15,80 +15,70 @@ import static org.junit.Assert.*;
 
 @RunWith(JMock.class)
 public class ExportAllTransactionsAsCsvToFileActionTest {
+  private final Mockery mockery = new Mockery();
+  private final CsvFormat<List<Transaction>>
+      transactionsFileFormat = mockery.mock(
+      CsvFormat.class, "transactions file format");
+  private final WriteTextToFileAction writeTextToFileAction
+      = mockery.mock(WriteTextToFileAction.class);
+  private final ExportAllTransactionsAsCsvToFileAction
+      exportAllTransactionsAsCsvToFileAction
+      = new ExportAllTransactionsAsCsvToFileAction(
+      transactionsFileFormat, writeTextToFileAction);
 
-    private final Mockery mockery = new Mockery();
-    private final CsvFormat<List<Transaction>> transactionsFileFormat = mockery.mock(
-            CsvFormat.class, "transactions file format");
-    private final WriteTextToFileAction writeTextToFileAction = mockery.mock(WriteTextToFileAction.class);
+  @Test
+  public void happyPath() throws Exception {
+    final String csvText = "::the transactions as CSV::";
+    final File path = new File("/irrelevant/path");
 
-    @Test
-    public void happyPath() throws Exception {
-        final String csvText = "::the transactions as CSV::";
-        final File path = new File("/irrelevant/path");
+    mockery.checking(
+        new Expectations() {{
+          allowing(transactionsFileFormat).format(
+              with(
+                  any(
+                      List.class)));
+          will(returnValue(csvText));
 
-        mockery.checking(
-                new Expectations() {
-                    {
-                        allowing(transactionsFileFormat).format(
-                                with(
-                                any(
-                                List.class)));
-                        will(returnValue(csvText));
+          oneOf(writeTextToFileAction).writeTextToFile(
+              csvText, path);
+        }});
 
-                        oneOf(writeTextToFileAction).writeTextToFile(
-                                csvText, path);
-                    }
-                });
+    final List<Transaction> transactions = Lists
+        .newArrayList();
 
-        final List<Transaction> transactions = Lists
-                .newArrayList();
+    exportAllTransactionsAsCsvToFileAction
+        .exportAllTransactionsAsCsvToFileAction(
+            transactions, path);
+  }
 
-        exportAllTransactionsAsCsvToFileAction(
-                transactions, path);
+  @Test
+  public void writingToFileFails() throws Exception {
+    final IOException ioFailure = new IOException(
+        "You probably ran out of disk space.");
+
+    mockery.checking(
+        new Expectations() {{
+          ignoring(transactionsFileFormat);
+
+          allowing(writeTextToFileAction).writeTextToFile(
+              with(any(String.class)), with(
+              any(
+                  File.class)));
+          will(throwException(ioFailure));
+        }});
+
+    final List<Transaction> irrelevantTransactions = Lists
+        .newArrayList();
+    try {
+      exportAllTransactionsAsCsvToFileAction
+          .exportAllTransactionsAsCsvToFileAction(
+              irrelevantTransactions, new File(
+              "/irrelevant/path"));
+      fail(
+          "Writing text to disk failed, " +
+          "but you don't care?!");
+    } catch (IOException success) {
+      assertSame(ioFailure, success);
     }
-
-    @Test
-    public void writingToFileFails() throws Exception {
-        final IOException ioFailure = new IOException(
-                "You probably ran out of disk space.");
-
-        mockery.checking(
-                new Expectations() {
-                    {
-                        ignoring(transactionsFileFormat);
-
-                        allowing(writeTextToFileAction).writeTextToFile(
-                                with(any(String.class)), with(
-                                any(
-                                File.class)));
-                        will(throwException(ioFailure));
-                    }
-                });
-
-        final List<Transaction> irrelevantTransactions = Lists
-                .newArrayList();
-        try {
-            exportAllTransactionsAsCsvToFileAction(
-                    irrelevantTransactions, new File(
-                    "/irrelevant/path"));
-            fail(
-                    "Writing text to disk failed, "
-                    + "but you don't care?!");
-        } catch (IOException success) {
-            assertSame(ioFailure, success);
-        }
-    }
-
-    private void exportAllTransactionsAsCsvToFileAction(
-            List<Transaction> transactions, final File path) throws IOException {
-        final String text = transactionsFileFormat.format(
-                transactions);
-        new WriteTextAction() {
-            @Override
-            public void writeText(String text)
-                    throws IOException {
-                writeTextToFileAction.writeTextToFile(text, path);
-            }
-        }.writeText(text);
-    }
+  }
 }
