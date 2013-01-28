@@ -1,7 +1,10 @@
 package com.pduda.penny.domain.presenter;
 
 import java.io.File;
+import java.io.IOException;
 
 public interface WriteTextToFileAction {
-  void writeTextToFile(String csvText, File path);
+
+    void writeTextToFile(String csvText, File path)
+            throws IOException;
 }
