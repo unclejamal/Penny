@@ -30,8 +30,7 @@ public class WriteTextToFileTest {
         final File file = new File(
                 testOutputDirectory, "happyPath.csv");
 
-        new WriteTextToFileActionImpl().writeTextToFile(
-                "::text::", file);
+        new WriteTextToFileAction(file).writeText("::text::");
 
         assertEquals(
                 "::text::", FileUtils.readFileToString(
@@ -42,12 +41,14 @@ public class WriteTextToFileTest {
     public void ioFailure() throws Exception {
         final IOException ioFailure = new IOException(
                 "Simulating a failure writing to the file.");
+        final File file = new File(
+                testOutputDirectory, "anyWritableFile.txt");
         try {
-            new WriteTextToFileActionImpl() {
+            new WriteTextToFileAction(file) {
                 @Override
-                protected FileWriter fileWriterOn(File path)
+                protected FileWriter fileWriterOnDestinationFile()
                         throws IOException {
-                    return new FileWriter(path) {
+                    return new FileWriter(file) {
                         @Override
                         public void write(String str, int off, int len)
                                 throws IOException {
@@ -55,9 +56,7 @@ public class WriteTextToFileTest {
                         }
                     };
                 }
-            }.writeTextToFile(
-                    "::text::", new File(
-                    testOutputDirectory, "anyWritableFile.txt"));
+            }.writeText("::text::");
             fail("How did you survive the I/O failure?!");
         } catch (IOException success) {
             if (success != ioFailure) {
@@ -73,8 +72,7 @@ public class WriteTextToFileTest {
         FileUtils.write(
                 file, "There is already something here.");
 
-        new WriteTextToFileActionImpl().writeTextToFile(
-                "::text::", file);
+        new WriteTextToFileAction(file).writeText("::text::");
 
         assertEquals(
                 "::text::", FileUtils.readFileToString(
