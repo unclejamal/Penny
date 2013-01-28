@@ -1,6 +1,6 @@
 package com.pduda.penny.domain.view;
 
-public interface CsvFormat<ValueType> {
+public interface CsvFormat<T> {
 
-    String format(ValueType value);
+    String format(T t);
 }
