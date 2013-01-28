@@ -5,6 +5,6 @@ import java.io.IOException;
 
 public interface WriteTextToFileAction {
 
-    void writeTextToFile(String csvText, File path)
+    void writeTextToFile(String text, File path)
             throws IOException;
 }

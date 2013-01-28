@@ -2,3 +2,5 @@ target/
 *~
 *.swp
 .swo
+tmp
+test/output
