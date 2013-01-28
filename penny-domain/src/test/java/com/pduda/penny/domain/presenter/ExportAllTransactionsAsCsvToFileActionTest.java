@@ -19,10 +19,10 @@ public class ExportAllTransactionsAsCsvToFileActionTest {
     private final Mockery mockery = new Mockery();
     private final CsvFormat<List<Transaction>> transactionsFileFormat = mockery.mock(
             CsvFormat.class, "transactions file format");
-    private final WriteTextToFileAction writeTextToFileAction = mockery.mock(WriteTextToFileAction.class);
+    private final WriteTextAction writeTextAction = mockery
+            .mock(WriteTextAction.class);
     private final ExportAllTransactionsAsCsvToFileAction exportAllTransactionsAsCsvToFileAction = new ExportAllTransactionsAsCsvToFileAction(
-            transactionsFileFormat, writeTextToFileAction,
-            new File("/irrelevant/path"));
+            transactionsFileFormat, writeTextAction);
 
     @Test
     public void happyPath() throws Exception {
@@ -38,8 +38,7 @@ public class ExportAllTransactionsAsCsvToFileActionTest {
                                 List.class)));
                         will(returnValue(csvText));
 
-                        oneOf(writeTextToFileAction).writeTextToFile(
-                                csvText, path);
+                        oneOf(writeTextAction).writeText(csvText);
                     }
                 });
 
@@ -61,10 +60,10 @@ public class ExportAllTransactionsAsCsvToFileActionTest {
                     {
                         ignoring(transactionsFileFormat);
 
-                        allowing(writeTextToFileAction).writeTextToFile(
-                                with(any(String.class)), with(
+                        allowing(writeTextAction).writeText(
+                                with(
                                 any(
-                                File.class)));
+                                String.class)));
                         will(throwException(ioFailure));
                     }
                 });
