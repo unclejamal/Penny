@@ -29,12 +29,6 @@ public class DisplayNumberOfTransactionsTest
 
     @Override
     protected BrowseTransactionsView initializeView() {
-        final BrowseTransactionsActivity browseTransactionsActivity = new BrowseTransactionsActivity();
-        browseTransactionsActivity.onCreate(null);
-        final TextView transactionsCountView = (TextView) browseTransactionsActivity
-                .findViewById(R.id.transactionsCount);
-        final AndroidBrowseTransactionsView androidBrowseTransactionsView = new AndroidBrowseTransactionsView(
-                null);
-        return androidBrowseTransactionsView;
+        return new AndroidBrowseTransactionsView(null);
     }
 }
