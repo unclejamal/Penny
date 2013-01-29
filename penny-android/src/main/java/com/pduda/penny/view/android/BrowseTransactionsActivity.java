@@ -34,20 +34,6 @@ public class BrowseTransactionsActivity extends Activity
         // in the process of being created is itself the view.
         // We have to wait for super() to be (implicitly) invoked.
 
-        // REFACTOR Delegate BrowseTransactionsView behavior to a new class
-        this.rendersView = new BrowseTransactionsPresenter(
-                new BrowseTransactionsModel() {
-                    @Override
-                    public int countTransactions() {
-                        return 12;
-                    }
-
-                    @Override
-                    public List<Transaction> findAllTransactions() {
-                        return Lists.<Transaction>newArrayList();
-                    }
-                }, this);
-
         this.exportAllTransactionsAction = new ExportAllTransactionsAction() {
             @Override
             public void execute(List<Transaction> transactions) {
@@ -61,15 +47,16 @@ public class BrowseTransactionsActivity extends Activity
         this.browseTransactionsModel = new BrowseTransactionsModel() {
             @Override
             public int countTransactions() {
-                return 0;
+                return findAllTransactions().size();
             }
 
             @Override
             public List<Transaction> findAllTransactions() {
-                return null;  //To change body of implemented
-                // methods use File | Settings | File Templates.
+                return Lists.newArrayList();
             }
         };
+
+        this.rendersView = new BrowseTransactionsPresenter(this.browseTransactionsModel, this);
 
         this.androidDevicePublicStorageGateway = new AndroidDevicePublicStorageGateway() {
             @Override
@@ -78,14 +65,6 @@ public class BrowseTransactionsActivity extends Activity
                 return new File(".");
             }
         };
-    }
-
-    /**
-     * @deprecated
-     */
-    public BrowseTransactionsActivity(
-            RendersView rendersView) {
-        this(rendersView, null, null, null);
     }
 
     public BrowseTransactionsActivity(
