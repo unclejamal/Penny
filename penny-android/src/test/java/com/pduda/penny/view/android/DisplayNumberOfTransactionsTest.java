@@ -14,25 +14,26 @@ public class DisplayNumberOfTransactionsTest
     @Test
     public void happyPath() throws Exception {
         final BrowseTransactionsActivity browseTransactionsActivity = new BrowseTransactionsActivity();
-        final AndroidBrowseTransactionsView androidBrowseTransactionsView = new AndroidBrowseTransactionsView(
-                browseTransactionsActivity);
         browseTransactionsActivity.onCreate(null);
+        final TextView transactionsCountView = (TextView) browseTransactionsActivity
+                .findViewById(R.id.transactionsCount);
+        final AndroidBrowseTransactionsView androidBrowseTransactionsView = new AndroidBrowseTransactionsView(
+                transactionsCountView);
 
         androidBrowseTransactionsView
                 .displayNumberOfTransactions(12);
 
-        final TextView transactionsCountView = (TextView) browseTransactionsActivity
-                .findViewById(R.id.transactionsCount);
-        assertEquals(
-                "12", transactionsCountView.getText().toString());
+        assertEquals("12", transactionsCountView.getText().toString());
     }
 
     @Override
     protected BrowseTransactionsView initializeView() {
         final BrowseTransactionsActivity browseTransactionsActivity = new BrowseTransactionsActivity();
         browseTransactionsActivity.onCreate(null);
+        final TextView transactionsCountView = (TextView) browseTransactionsActivity
+                .findViewById(R.id.transactionsCount);
         final AndroidBrowseTransactionsView androidBrowseTransactionsView = new AndroidBrowseTransactionsView(
-                browseTransactionsActivity);
+                transactionsCountView);
         return androidBrowseTransactionsView;
     }
 }

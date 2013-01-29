@@ -89,7 +89,7 @@ public class BrowseTransactionsActivity extends Activity {
             }
         };
 
-        this.browseTransactionsView = new AndroidBrowseTransactionsView(this);
+        this.browseTransactionsView = new AndroidBrowseTransactionsView(transactionsCountView());
 
         this.rendersView = new BrowseTransactionsPresenter(
                 this.browseTransactionsModel, this.browseTransactionsView);
@@ -101,6 +101,10 @@ public class BrowseTransactionsActivity extends Activity {
                 return new File(".");
             }
         };
+    }
+
+    private TextView transactionsCountView() {
+        return (TextView) findViewById(R.id.transactionsCount);
     }
 
     // REFACTOR Move to businessDelegate?
