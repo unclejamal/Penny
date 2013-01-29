@@ -7,7 +7,6 @@ import com.pduda.penny.toolkit.ProgrammerMistake;
 public class AndroidBrowseTransactionsView
         implements BrowseTransactionsView {
 
-    private BrowseTransactionsActivity browseTransactionsActivity;
     private final TextView transactionsCountView;
 
     public AndroidBrowseTransactionsView(TextView transactionsCountView) {
@@ -26,9 +25,6 @@ public class AndroidBrowseTransactionsView
                     numberOfTransactions)));
         }
 
-        final TextView transactionsCountView = (TextView) browseTransactionsActivity
-                .findViewById(
-                R.id.transactionsCount);
         transactionsCountView.setText(
                 String.format(
                 "%1$d", numberOfTransactions));
