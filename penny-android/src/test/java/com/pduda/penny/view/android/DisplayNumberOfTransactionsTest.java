@@ -13,6 +13,8 @@ public class DisplayNumberOfTransactionsTest
 
     @Test
     public void happyPath() throws Exception {
+        // The duplication between this test setup and
+        // initializeView() is incidental; don't remove it
         final BrowseTransactionsActivity browseTransactionsActivity = new BrowseTransactionsActivity();
         browseTransactionsActivity.onCreate(null);
         final TextView transactionsCountView = (TextView) browseTransactionsActivity
@@ -26,6 +28,9 @@ public class DisplayNumberOfTransactionsTest
         assertEquals("12", transactionsCountView.getText().toString());
     }
 
+    // The duplication between initializeView() and the
+    // setup for the other tests is incidental; don't
+    // remove it
     @Override
     protected BrowseTransactionsView initializeView() {
         final BrowseTransactionsActivity browseTransactionsActivity = new BrowseTransactionsActivity();
