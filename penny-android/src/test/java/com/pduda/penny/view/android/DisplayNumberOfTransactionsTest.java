@@ -34,7 +34,7 @@ public class DisplayNumberOfTransactionsTest
         final TextView transactionsCountView = (TextView) browseTransactionsActivity
                 .findViewById(R.id.transactionsCount);
         final AndroidBrowseTransactionsView androidBrowseTransactionsView = new AndroidBrowseTransactionsView(
-                transactionsCountView);
+                null);
         return androidBrowseTransactionsView;
     }
 }
