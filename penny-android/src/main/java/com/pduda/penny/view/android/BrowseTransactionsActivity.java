@@ -16,7 +16,6 @@ import com.pduda.penny.domain.presenter.BrowseTransactionsPresenter;
 import com.pduda.penny.domain.presenter.ExportAllTransactionsAction;
 import com.pduda.penny.domain.presenter.RendersView;
 import com.pduda.penny.domain.view.BrowseTransactionsView;
-import com.pduda.penny.toolkit.ProgrammerMistake;
 
 import java.io.File;
 import java.util.List;
@@ -104,26 +103,7 @@ public class BrowseTransactionsActivity extends Activity
             }
         };
 
-        this.browseTransactionsView = new BrowseTransactionsView() {
-            @Override
-            public void displayNumberOfTransactions(
-                    int numberOfTransactions) {
-                if (numberOfTransactions < 0) {
-                    throw new ProgrammerMistake(
-                            new IllegalArgumentException(
-                            String.format(
-                            "number of transactions can't be "
-                            + "negative, but it's %1$d",
-                            numberOfTransactions)));
-                }
-
-                final TextView transactionsCountView = (TextView) findViewById(
-                        R.id.transactionsCount);
-                transactionsCountView.setText(
-                        String.format(
-                        "%1$d", numberOfTransactions));
-            }
-        };
+        this.browseTransactionsView = new AndroidBrowseTransactionsView(this);
     }
 
     // REFACTOR Move to businessDelegate?

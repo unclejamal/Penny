@@ -9,36 +9,30 @@ import static org.junit.Assert.*;
 
 @RunWith(RobolectricTestRunner.class)
 public class DisplayNumberOfTransactionsTest
-    extends BrowseTransactionsViewContract {
+        extends BrowseTransactionsViewContract {
 
-  @Test
-  public void happyPath() throws Exception {
-    final BrowseTransactionsActivity
-        browseTransactionsActivity
-        = new BrowseTransactionsActivity();
+    @Test
+    public void happyPath() throws Exception {
+        final BrowseTransactionsActivity browseTransactionsActivity = new BrowseTransactionsActivity();
+        final AndroidBrowseTransactionsView androidBrowseTransactionsView = new AndroidBrowseTransactionsView(
+                browseTransactionsActivity);
+        browseTransactionsActivity.onCreate(null);
 
-    browseTransactionsActivity.onCreate(null);
+        androidBrowseTransactionsView
+                .displayNumberOfTransactions(12);
 
-    browseTransactionsActivity.displayNumberOfTransactions(
-        12);
+        final TextView transactionsCountView = (TextView) browseTransactionsActivity
+                .findViewById(R.id.transactionsCount);
+        assertEquals(
+                "12", transactionsCountView.getText().toString());
+    }
 
-    final TextView transactionsCountView
-        = (TextView) browseTransactionsActivity
-        .findViewById(R.id.transactionsCount);
-
-    assertEquals(
-        "12", transactionsCountView.getText().toString()
-    );
-  }
-
-  @Override
-  protected BrowseTransactionsView initializeView() {
-    final BrowseTransactionsActivity
-        browseTransactionsActivity
-        = new BrowseTransactionsActivity();
-
-    browseTransactionsActivity.onCreate(null);
-
-    return browseTransactionsActivity;
-  }
+    @Override
+    protected BrowseTransactionsView initializeView() {
+        final BrowseTransactionsActivity browseTransactionsActivity = new BrowseTransactionsActivity();
+        browseTransactionsActivity.onCreate(null);
+        final AndroidBrowseTransactionsView androidBrowseTransactionsView = new AndroidBrowseTransactionsView(
+                browseTransactionsActivity);
+        return androidBrowseTransactionsView;
+    }
 }
