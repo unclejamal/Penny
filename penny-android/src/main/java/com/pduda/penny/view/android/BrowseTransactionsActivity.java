@@ -96,6 +96,8 @@ public class BrowseTransactionsActivity extends Activity
         setContentView(R.layout.main);
     }
 
+    // REFACTOR Move to a different class
+    @Override
     public void displayNumberOfTransactions(
             int transactionCount) {
         if (transactionCount < 0) {
