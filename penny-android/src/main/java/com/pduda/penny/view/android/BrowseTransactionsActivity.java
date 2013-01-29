@@ -20,8 +20,7 @@ import com.pduda.penny.domain.view.BrowseTransactionsView;
 import java.io.File;
 import java.util.List;
 
-public class BrowseTransactionsActivity extends Activity
-        implements BrowseTransactionsView {
+public class BrowseTransactionsActivity extends Activity {
 
     private RendersView rendersView;
     private ExportAllTransactionsAction exportAllTransactionsAction;
@@ -90,10 +89,10 @@ public class BrowseTransactionsActivity extends Activity
             }
         };
 
-        // REFACTOR Delegate BrowseTransactionsView behavior
-        // to a new class
+        this.browseTransactionsView = new AndroidBrowseTransactionsView(this);
+
         this.rendersView = new BrowseTransactionsPresenter(
-                this.browseTransactionsModel, this);
+                this.browseTransactionsModel, this.browseTransactionsView);
 
         this.androidDevicePublicStorageGateway = new AndroidDevicePublicStorageGateway() {
             @Override
@@ -102,8 +101,6 @@ public class BrowseTransactionsActivity extends Activity
                 return new File(".");
             }
         };
-
-        this.browseTransactionsView = new AndroidBrowseTransactionsView(this);
     }
 
     // REFACTOR Move to businessDelegate?
