@@ -9,6 +9,7 @@ import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.junit.Assert.*;
 import static com.pduda.hamcrest.RegexMatcher.*;
 import com.pduda.penny.Conveniences;
+import com.pduda.penny.ObjectMother;
 import com.pduda.penny.domain.model.Amount;
 import com.pduda.penny.domain.model.Category;
 import com.pduda.penny.domain.model.Transaction;
@@ -68,9 +69,9 @@ public class FormatTransactionsAsCsvFileTest {
 
     final String text = transactionsCsvFileFormat.format(
         Lists.newArrayList(
-            createAnyNonNullTransaction(),
-            createAnyNonNullTransaction(),
-            createAnyNonNullTransaction()));
+            ObjectMother.createAnyNonNullTransaction(),
+            ObjectMother.createAnyNonNullTransaction(),
+            ObjectMother.createAnyNonNullTransaction()));
 
     final List<String> lines = Arrays.asList(
         text.split(
@@ -81,12 +82,5 @@ public class FormatTransactionsAsCsvFileTest {
     assertThat(lines.get(2), matches("::row 2::"));
     assertThat(lines.get(3), matches("::row 3::"));
     assertThat(text, endsWith(Conveniences.NEWLINE));
-  }
-
-  private Transaction createAnyNonNullTransaction() {
-    return new Transaction(
-        new LocalDate(2012, 8, 4), new Category(
-        "irrelevant category"), Amount.cents(
-        26123));
   }
 }

@@ -5,7 +5,7 @@ import java.util.*;
 public class InMemoryBrowseTransactionsModelTest extends BrowseTransactionsModelContract {
 
     @Override
-    protected BrowseTransactionsModel createBrowseTransactionModelWith(Collection<Object> transactions) {
+    protected BrowseTransactionsModel createBrowseTransactionModelWith(List<Transaction> transactions) {
         return new InMemoryBrowseTransactionsModel(
                 transactions);
     }
@@ -14,7 +14,7 @@ public class InMemoryBrowseTransactionsModelTest extends BrowseTransactionsModel
     protected BrowseTransactionsModel createBrowseTransactionsModelWhereFindAllTransactionsFailsWith(final RuntimeException intentionalException) {
         return new InMemoryBrowseTransactionsModel(null) {
             @Override
-            public Collection<Object> findAllTransactions() {
+            public List<Transaction> findAllTransactions() {
                 throw intentionalException;
             }
         };

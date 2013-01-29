@@ -17,6 +17,8 @@ import java.util.regex.Pattern;
 import org.junit.Before;
 
 import static com.pduda.hamcrest.RegexMatcher.*;
+import com.pduda.penny.ObjectMother;
+import com.pduda.penny.domain.model.Transaction;
 import java.io.File;
 import java.util.List;
 import static org.junit.Assert.*;
@@ -157,6 +159,30 @@ public class HandleExportAllTransactionsTest {
         assertLastToastMatchesRegex(
                 "Something strange just happened. Try again. You might need to reinstall the "
                 + "application. I feel embarrassed and ashamed.");
+    }
+
+    @Test
+    public void exportWhateverTheModelProvides()
+            throws Exception {
+        final List<Transaction> anyNonEmptyListOfTransactions = ObjectMother.anyNonEmptyListOfTransactions();
+
+        mockery.checking(
+                new Expectations() {
+                    {
+                        allowing(browseTransactionsModel)
+                                .findAllTransactions();
+                        will(returnValue(anyNonEmptyListOfTransactions));
+
+                        ignoring(androidDevicePublicStorageGateway);
+
+                        oneOf(exportAllTransactionsAction).execute(
+                                with(
+                                anyNonEmptyListOfTransactions));
+                    }
+                });
+
+        pressExportAllTransactionsButton(
+                browseTransactionsActivity);
     }
 
     private void pressExportAllTransactionsButton(BrowseTransactionsActivity browseTransactionsActivity) {

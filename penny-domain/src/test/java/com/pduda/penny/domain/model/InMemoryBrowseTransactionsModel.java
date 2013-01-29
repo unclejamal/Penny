@@ -1,14 +1,14 @@
 package com.pduda.penny.domain.model;
 
-import java.util.Collection;
+import java.util.List;
 
 public class InMemoryBrowseTransactionsModel
         implements BrowseTransactionsModel {
 
-    private final Collection<Object> transactions;
+    private final List<Transaction> transactions;
 
     public InMemoryBrowseTransactionsModel(
-            Collection<Object> transactions) {
+            List<Transaction> transactions) {
         this.transactions = transactions;
     }
 
@@ -21,7 +21,7 @@ public class InMemoryBrowseTransactionsModel
     }
 
     @Override
-    public Collection<Object> findAllTransactions() {
+    public List<Transaction> findAllTransactions() {
         return transactions;
     }
 }

@@ -1,8 +1,9 @@
 package com.pduda.penny.domain.model;
 
 import com.google.common.collect.Lists;
-import java.util.Collection;
+import com.pduda.penny.ObjectMother;
 import java.util.Collections;
+import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -11,7 +12,7 @@ public abstract class BrowseTransactionsModelContract {
     @Test
     public void zeroTransactions() throws Exception {
 
-        final BrowseTransactionsModel model = createBrowseTransactionModelWith(Lists.newArrayList());
+        final BrowseTransactionsModel model = createBrowseTransactionModelWith(Lists.<Transaction>newArrayList());
         assertEquals(
                 Collections.emptyList(),
                 model.findAllTransactions());
@@ -20,9 +21,7 @@ public abstract class BrowseTransactionsModelContract {
 
     @Test
     public void manyTransactions() throws Exception {
-        final Collection<Object> transactions = Lists
-                .newArrayList(
-                new Object(), new Object(), new Object());
+        final List<Transaction> transactions = ObjectMother.anyNonEmptyListOfTransactions();
         final BrowseTransactionsModel model = createBrowseTransactionModelWith(transactions);
         assertEquals(transactions, model.findAllTransactions());
         assertEquals(3, model.countTransactions());
@@ -40,7 +39,7 @@ public abstract class BrowseTransactionsModelContract {
         }
     }
 
-    protected abstract BrowseTransactionsModel createBrowseTransactionModelWith(Collection<Object> transactions);
+    protected abstract BrowseTransactionsModel createBrowseTransactionModelWith(List<Transaction> transactions);
 
     protected abstract BrowseTransactionsModel createBrowseTransactionsModelWhereFindAllTransactionsFailsWith(final RuntimeException intentionalException);
 }
