@@ -18,6 +18,7 @@ import org.junit.Before;
 
 import static com.pduda.hamcrest.RegexMatcher.*;
 import java.io.File;
+import java.util.List;
 import static org.junit.Assert.*;
 
 @RunWith(RobolectricTestRunner.class)
@@ -52,7 +53,7 @@ public class HandleExportAllTransactionsTest {
                         // SMELL Irrelevant detail
                         ignoring(androidDevicePublicStorageGateway).findPublicExternalStorageDirectory();
 
-                        allowing(exportAllTransactionsAction).execute();
+                        allowing(exportAllTransactionsAction).execute(with(any(List.class)));
                         // succeeds by not throwing an exception
                     }
                 });
@@ -143,7 +144,7 @@ public class HandleExportAllTransactionsTest {
                         ignoring(androidDevicePublicStorageGateway);
 
                         allowing(exportAllTransactionsAction)
-                                .execute();
+                                .execute(with(any(List.class)));
                         will(
                                 throwException(
                                 new InternalStorageException()));

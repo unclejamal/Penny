@@ -1,6 +1,9 @@
 package com.pduda.penny.domain.presenter;
 
+import com.pduda.penny.domain.model.Transaction;
+import java.util.List;
+
 public interface ExportAllTransactionsAction {
 
-    void execute();
+    void execute(List<Transaction> transactions);
 }

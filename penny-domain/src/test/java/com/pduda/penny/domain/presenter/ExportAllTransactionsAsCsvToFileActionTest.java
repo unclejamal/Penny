@@ -46,7 +46,7 @@ public class ExportAllTransactionsAsCsvToFileActionTest {
                 .newArrayList();
 
         exportAllTransactionsAsCsvToFileAction
-                .exportAllTransactionsAsCsvToFileAction(
+                .execute(
                 transactions);
     }
 
@@ -72,7 +72,7 @@ public class ExportAllTransactionsAsCsvToFileActionTest {
                 .newArrayList();
         try {
             exportAllTransactionsAsCsvToFileAction
-                    .exportAllTransactionsAsCsvToFileAction(
+                    .execute(
                     irrelevantTransactions);
             fail(
                     "Writing text to disk failed, "
