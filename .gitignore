@@ -4,3 +4,5 @@ target/
 .swo
 tmp
 test/output
+test/data
+TrackEveryPenny.csv
