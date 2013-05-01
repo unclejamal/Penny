@@ -2,7 +2,6 @@ package com.pduda.penny.domain.presenter;
 
 import com.pduda.penny.domain.model.Transaction;
 import com.pduda.penny.domain.view.CsvFormat;
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
