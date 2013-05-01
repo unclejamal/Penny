@@ -5,7 +5,7 @@ import com.pduda.penny.domain.view.CsvFormat;
 import java.io.IOException;
 import java.util.List;
 
-public class ExportAllTransactionsAsCsvToFileAction {
+public class ExportAllTransactionsAsCsvToFileAction implements ExportAllTransactionsAction {
 
     private final CsvFormat<List<Transaction>> transactionsFileFormat;
     private WriteTextAction writeTextAction;

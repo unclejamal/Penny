@@ -14,10 +14,19 @@ import com.pduda.penny.domain.model.InternalStorageException;
 import com.pduda.penny.domain.model.Transaction;
 import com.pduda.penny.domain.presenter.BrowseTransactionsPresenter;
 import com.pduda.penny.domain.presenter.ExportAllTransactionsAction;
+import com.pduda.penny.domain.presenter.ExportAllTransactionsAsCsvToFileAction;
 import com.pduda.penny.domain.presenter.RendersView;
+import com.pduda.penny.domain.view.AmountCsvFormat;
 import com.pduda.penny.domain.view.BrowseTransactionsView;
+import com.pduda.penny.domain.view.CategoryCsvFormat;
+import com.pduda.penny.domain.view.DateCsvFormat;
+import com.pduda.penny.domain.view.TransactionCsvFormat;
+import com.pduda.penny.domain.view.TransactionsCsvFileFormat;
+import com.pduda.penny.domain.view.TransactionsCsvHeader;
+import com.pduda.penny.domain.view.WriteTextToFileAction;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class BrowseTransactionsActivity extends Activity {
@@ -64,6 +73,14 @@ public class BrowseTransactionsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+        this.androidDevicePublicStorageGateway = new AndroidDevicePublicStorageGateway() {
+            @Override
+            public File findPublicExternalStorageDirectory()
+                    throws PublicStorageMediaNotAvailableException {
+                return new File(".");
+            }
+        };
+
         // This seems like a more logical place to initialise
         // the View, anyway.
         this.exportAllTransactionsAction = new ExportAllTransactionsAction() {
@@ -72,6 +89,48 @@ public class BrowseTransactionsActivity extends Activity {
                 // Do nothing, for now
             }
         };
+
+        // SMELL This needs the
+        // AndroidDevicePublicStorageGateway,
+        // but doesn't depend directly on it
+        final File exportedTransactionsPath;
+        try {
+            exportedTransactionsPath = new File(
+                    androidDevicePublicStorageGateway
+                    .findPublicExternalStorageDirectory(),
+                    "TrackEveryPenny.csv");
+        } catch (PublicStorageMediaNotAvailableException reported) {
+            handleError(
+                    "Couldn't save a file to public storage; media "
+                    + "not available",
+                    "No place to which to export the transactions. "
+                    + "Insert an SD card or connect an external "
+                    + "storage device and try again.",
+                    reported);
+            return;
+        } catch (PublicStorageMediaNotWritableException reported) {
+            final String pathNotWritableAsText = reported
+                    .getPathNotWritable().getAbsolutePath();
+            handleError(
+                    String.format(
+                    "Path %1$s not writable",
+                    pathNotWritableAsText), String.format(
+                    "Permission denied trying to export the "
+                    + "transactions to file %1$s",
+                    pathNotWritableAsText), reported);
+            return;
+        }
+
+        this.exportAllTransactionsAction = new ExportAllTransactionsAsCsvToFileAction(
+                new TransactionsCsvFileFormat(
+                new TransactionsCsvHeader(),
+                new TransactionCsvFormat(
+                new DateCsvFormat(),
+                new CategoryCsvFormat(),
+                new AmountCsvFormat())),
+                new WriteTextToFileAction(
+                exportedTransactionsPath));
+
 
         // SMELL I have to initialize this because I can't
         // use constructor chaining yet.
@@ -91,16 +150,11 @@ public class BrowseTransactionsActivity extends Activity {
 
         this.browseTransactionsView = new AndroidBrowseTransactionsView(transactionsCountView());
 
+        // REFACTOR Delegate BrowseTransactionsView behavior
+        // to a new class
         this.rendersView = new BrowseTransactionsPresenter(
-                this.browseTransactionsModel, this.browseTransactionsView);
-
-        this.androidDevicePublicStorageGateway = new AndroidDevicePublicStorageGateway() {
-            @Override
-            public File findPublicExternalStorageDirectory()
-                    throws PublicStorageMediaNotAvailableException {
-                return new File(".");
-            }
-        };
+                this.browseTransactionsModel,
+                this.browseTransactionsView);
     }
 
     private TextView transactionsCountView() {
@@ -139,6 +193,8 @@ public class BrowseTransactionsActivity extends Activity {
                     "Permission denied trying to export the transactions to file %1$s",
                     pathNotWritableAsText),
                     reported);
+        } catch (IOException unhandled) {
+            throw new RuntimeException(unhandled);
         }
     }
 
