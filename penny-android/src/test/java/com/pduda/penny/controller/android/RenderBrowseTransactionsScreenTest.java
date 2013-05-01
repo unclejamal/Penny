@@ -1,6 +1,8 @@
 package com.pduda.penny.controller.android;
 
 import android.widget.Button;
+import com.pduda.penny.domain.model.BrowseTransactionsModel;
+import com.pduda.penny.domain.presenter.ExportAllTransactionsAction;
 import com.pduda.penny.domain.presenter.RendersView;
 import com.pduda.penny.view.android.BrowseTransactionsActivity;
 import com.pduda.penny.view.android.R;
@@ -25,10 +27,10 @@ public class RenderBrowseTransactionsScreenTest {
 
         mockery.checking(
                 new Expectations() {
-                    {
-                        oneOf(rendersView).render();
-                    }
-                });
+            {
+                oneOf(rendersView).render();
+            }
+        });
 
         new BrowseTransactionsActivity(
                 rendersView, null, null, null) {
@@ -47,8 +49,27 @@ public class RenderBrowseTransactionsScreenTest {
     @Test
     public void exportAllTransactionsButtonDoesNotBlowUp()
             throws Exception {
+        final ExportAllTransactionsAction exportAllTransactionsAction = mockery.mock(
+                ExportAllTransactionsAction.class);
+        final AndroidDevicePublicStorageGateway androidDevicePublicStorageGateway = mockery.mock(
+                AndroidDevicePublicStorageGateway.class);
+        final BrowseTransactionsModel browseTransactionsModel = mockery.mock(BrowseTransactionsModel.class);
+
         final BrowseTransactionsActivity browseTransactionsActivity = new BrowseTransactionsActivity();
         browseTransactionsActivity.onCreate(null);
+        browseTransactionsActivity.setCollaborators(
+                exportAllTransactionsAction,
+                androidDevicePublicStorageGateway,
+                browseTransactionsModel);
+
+        mockery.checking(
+                new Expectations() {
+            {
+                ignoring(exportAllTransactionsAction);
+                ignoring(androidDevicePublicStorageGateway);
+                ignoring(browseTransactionsModel);
+            }
+        });
 
         final Button exportAllTransactionsButton = (Button) browseTransactionsActivity.findViewById(
                 R.id.exportAllTransactionsButton);
