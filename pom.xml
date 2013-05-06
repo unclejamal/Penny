@@ -8,9 +8,9 @@
     <name>Penny</name>
 
     <modules>
-        <module>penny-android</module>
-        <module>penny-domain</module>
         <module>penny-toolkit</module>
+        <module>penny-domain</module>
+        <module>penny-android</module>
     </modules>
 
     <properties>
