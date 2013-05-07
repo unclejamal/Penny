@@ -81,15 +81,6 @@ public class BrowseTransactionsActivity extends Activity {
         // WriteTextToFileAction
         this.androidDevicePublicStorageGateway = new AndroidDevicePublicStorageGatewayImpl();
 
-        // This seems like a more logical place to initialise
-        // the View, anyway.
-        this.exportAllTransactionsAction = new ExportAllTransactionsAction() {
-            @Override
-            public void execute(List<Transaction> transactions) {
-                // Do nothing, for now
-            }
-        };
-
         // SMELL This needs the
         // AndroidDevicePublicStorageGateway,
         // but doesn't depend directly on it

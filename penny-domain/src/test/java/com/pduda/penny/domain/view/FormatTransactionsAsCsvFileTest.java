@@ -21,66 +21,67 @@ import org.junit.runner.RunWith;
 
 @RunWith(JMock.class)
 public class FormatTransactionsAsCsvFileTest {
-  private Mockery mockery = new Mockery();
 
-  private final CsvFormat<Transaction> transactionCsvFormat
-      = mockery.mock(CsvFormat.class, "transaction format");
-  private final CsvHeaderFormat csvHeaderFormat = mockery
-      .mock(
-          CsvHeaderFormat.class, "header format");
-  private final TransactionsCsvFileFormat
-      transactionsCsvFileFormat
-      = new TransactionsCsvFileFormat(
-      csvHeaderFormat, transactionCsvFormat);
+    private Mockery mockery = new Mockery();
+    private final CsvFormat<Transaction> transactionCsvFormat = mockery.mock(CsvFormat.class, "transaction format");
+    private final CsvHeaderFormat csvHeaderFormat = mockery
+            .mock(
+            CsvHeaderFormat.class, "header format");
+    private final TransactionsCsvFileFormat transactionsCsvFileFormat = new TransactionsCsvFileFormat(
+            csvHeaderFormat, transactionCsvFormat);
 
-  @Test
-  public void noTransactions() throws Exception {
-    mockery.checking(
-        new Expectations() {{
-          allowing(csvHeaderFormat).formatHeader();
-          will(returnValue("::header::"));
-        }});
+    @Test
+    public void noTransactions() throws Exception {
+        mockery.checking(
+                new Expectations() {
+            {
+                allowing(csvHeaderFormat).formatHeader();
+                will(returnValue("::header::"));
+            }
+        });
 
-    final String text = transactionsCsvFileFormat.format(
-        Collections.<Transaction>emptyList());
-    final List<String> lines = Arrays.asList(
-        text.split(
-            Conveniences.NEWLINE));
-    assertEquals(1, lines.size());
-    assertThat(lines.get(0), matches("::header::"));
-    assertThat(text, endsWith(Conveniences.NEWLINE));
-  }
+        final String text = transactionsCsvFileFormat.format(
+                Collections.<Transaction>emptyList());
+        final List<String> lines = Arrays.asList(
+                text.split(
+                Conveniences.NEWLINE));
+        assertEquals(1, lines.size());
+        assertThat(lines.get(0), matches("::header::"));
+        assertThat(text, endsWith(Conveniences.NEWLINE));
+    }
 
-  @Test
-  public void aFewTransactions() throws Exception {
-    mockery.checking(
-        new Expectations() {{
-          allowing(csvHeaderFormat).formatHeader();
-          will(returnValue("::header::"));
-          allowing(transactionCsvFormat).format(
-              with(
-                  any(
-                      Transaction.class)));
-          will(
-              onConsecutiveCalls(
-                  returnValue("::row 1::"), returnValue(
-                  "::row 2::"), returnValue("::row 3::")));
-        }});
+    @Test
+    public void aFewTransactions() throws Exception {
+        mockery.checking(
+                new Expectations() {
+            {
+                allowing(csvHeaderFormat).formatHeader();
+                will(returnValue("::header::"));
+                allowing(transactionCsvFormat).format(
+                        with(
+                        any(
+                        Transaction.class)));
+                will(
+                        onConsecutiveCalls(
+                        returnValue("::row 1::"), returnValue(
+                        "::row 2::"), returnValue("::row 3::")));
+            }
+        });
 
-    final String text = transactionsCsvFileFormat.format(
-        Lists.newArrayList(
-            ObjectMother.createAnyNonNullTransaction(),
-            ObjectMother.createAnyNonNullTransaction(),
-            ObjectMother.createAnyNonNullTransaction()));
+        final String text = transactionsCsvFileFormat.format(
+                Lists.newArrayList(
+                ObjectMother.createAnyNonNullTransaction(),
+                ObjectMother.createAnyNonNullTransaction(),
+                ObjectMother.createAnyNonNullTransaction()));
 
-    final List<String> lines = Arrays.asList(
-        text.split(
-            Conveniences.NEWLINE));
-    assertEquals(4, lines.size());
-    assertThat(lines.get(0), matches("::header::"));
-    assertThat(lines.get(1), matches("::row 1::"));
-    assertThat(lines.get(2), matches("::row 2::"));
-    assertThat(lines.get(3), matches("::row 3::"));
-    assertThat(text, endsWith(Conveniences.NEWLINE));
-  }
+        final List<String> lines = Arrays.asList(
+                text.split(
+                Conveniences.NEWLINE));
+        assertEquals(4, lines.size());
+        assertThat(lines.get(0), matches("::header::"));
+        assertThat(lines.get(1), matches("::row 1::"));
+        assertThat(lines.get(2), matches("::row 2::"));
+        assertThat(lines.get(3), matches("::row 3::"));
+        assertThat(text, endsWith(Conveniences.NEWLINE));
+    }
 }
