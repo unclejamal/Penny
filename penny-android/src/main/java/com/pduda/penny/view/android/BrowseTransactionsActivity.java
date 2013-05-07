@@ -9,7 +9,9 @@ import com.google.common.collect.Lists;
 import com.pduda.penny.controller.android.AndroidDevicePublicStorageGateway;
 import com.pduda.penny.controller.android.PublicStorageMediaNotAvailableException;
 import com.pduda.penny.controller.android.PublicStorageMediaNotWritableException;
+import com.pduda.penny.domain.model.Amount;
 import com.pduda.penny.domain.model.BrowseTransactionsModel;
+import com.pduda.penny.domain.model.Category;
 import com.pduda.penny.domain.model.InternalStorageException;
 import com.pduda.penny.domain.model.Transaction;
 import com.pduda.penny.domain.presenter.BrowseTransactionsPresenter;
@@ -29,6 +31,7 @@ import com.pduda.penny.model.android.AndroidDevicePublicStorageGatewayImpl;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import org.joda.time.LocalDate;
 
 public class BrowseTransactionsActivity extends Activity {
 
@@ -141,7 +144,13 @@ public class BrowseTransactionsActivity extends Activity {
 
             @Override
             public List<Transaction> findAllTransactions() {
-                return Lists.newArrayList();
+                return Lists.newArrayList(
+                        new Transaction(new LocalDate(2012, 11, 19),
+                        new Category("Groceries"), Amount.cents(-11748)),
+                        new Transaction(new LocalDate(2012, 11, 19),
+                        new Category("Books"), Amount.cents(-799)),
+                        new Transaction(new LocalDate(2012, 11, 19),
+                        new Category("Utilities"), Amount.cents(-21034)));
             }
         };
 
