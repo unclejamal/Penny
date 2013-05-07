@@ -24,6 +24,7 @@ import com.pduda.penny.domain.view.TransactionCsvFormat;
 import com.pduda.penny.domain.view.TransactionsCsvFileFormat;
 import com.pduda.penny.domain.view.TransactionsCsvHeader;
 import com.pduda.penny.domain.view.WriteTextToFileAction;
+import com.pduda.penny.model.android.AndroidDevicePublicStorageGatewayImpl;
 
 import java.io.File;
 import java.io.IOException;
@@ -73,13 +74,9 @@ public class BrowseTransactionsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        this.androidDevicePublicStorageGateway = new AndroidDevicePublicStorageGateway() {
-            @Override
-            public File findPublicExternalStorageDirectory()
-                    throws PublicStorageMediaNotAvailableException {
-                return new File(".");
-            }
-        };
+        // SMELL This has to happen before instantiating the
+        // WriteTextToFileAction
+        this.androidDevicePublicStorageGateway = new AndroidDevicePublicStorageGatewayImpl();
 
         // This seems like a more logical place to initialise
         // the View, anyway.
